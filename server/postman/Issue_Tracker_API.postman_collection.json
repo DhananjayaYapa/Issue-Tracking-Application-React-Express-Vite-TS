@@ -1,0 +1,579 @@
+{
+    "info": {
+        "_postman_id": "issue-tracker-api-collection",
+        "name": "Issue Tracker API",
+        "description": "Complete API collection for Issue Tracker Backend",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:5000/api",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Health Check",
+            "item": [
+                {
+                    "name": "Health Check",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/health",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "health"
+                            ]
+                        },
+                        "description": "Check if the API server is running"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Register User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.token) {",
+                                    "    pm.collectionVariables.set('token', jsonData.data.token);",
+                                    "    console.log('Token saved to collection variable');",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/register",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register"
+                            ]
+                        },
+                        "description": "Register a new user. Token is automatically saved for subsequent requests."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.token) {",
+                                    "    pm.collectionVariables.set('token', jsonData.data.token);",
+                                    "    console.log('Token saved to collection variable');",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        },
+                        "description": "Login with email and password. Token is automatically saved."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Profile",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "profile"
+                            ]
+                        },
+                        "description": "Get the authenticated user's profile"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Profile",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Updated Name\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/profile",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "profile"
+                            ]
+                        },
+                        "description": "Update the authenticated user's name"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Change Password",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"currentPassword\": \"password123\",\n    \"newPassword\": \"newpassword123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/change-password",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "change-password"
+                            ]
+                        },
+                        "description": "Change the authenticated user's password"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Issues",
+            "item": [
+                {
+                    "name": "Get All Issues",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues?page=1&limit=10",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues"
+                            ],
+                            "query": [
+                                {
+                                    "key": "page",
+                                    "value": "1"
+                                },
+                                {
+                                    "key": "limit",
+                                    "value": "10"
+                                },
+                                {
+                                    "key": "status",
+                                    "value": "Open",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "priority",
+                                    "value": "High",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "severity",
+                                    "value": "Major",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "search",
+                                    "value": "bug",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "sortBy",
+                                    "value": "created_at",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "sortOrder",
+                                    "value": "desc",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Get all issues with pagination and optional filters"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get My Issues",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/my-issues",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "my-issues"
+                            ]
+                        },
+                        "description": "Get issues created by the authenticated user"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create Issue",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.data && jsonData.data.id) {",
+                                    "    pm.collectionVariables.set('issueId', jsonData.data.id);",
+                                    "    console.log('Issue ID saved:', jsonData.data.id);",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Login button not working\",\n    \"description\": \"Users cannot click the login button on mobile devices\",\n    \"priority\": \"High\",\n    \"severity\": \"Major\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/issues",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues"
+                            ]
+                        },
+                        "description": "Create a new issue. Issue ID is automatically saved for subsequent requests."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Issue by ID",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/{{issueId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "{{issueId}}"
+                            ]
+                        },
+                        "description": "Get a single issue by its ID"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Issue",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"title\": \"Login button not working - UPDATED\",\n    \"description\": \"Updated description with more details\",\n    \"priority\": \"Critical\",\n    \"status\": \"In Progress\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/{{issueId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "{{issueId}}"
+                            ]
+                        },
+                        "description": "Update an existing issue"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update Issue Status",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"Resolved\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/{{issueId}}/status",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "{{issueId}}",
+                                "status"
+                            ]
+                        },
+                        "description": "Update only the status of an issue"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete Issue",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/{{issueId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "{{issueId}}"
+                            ]
+                        },
+                        "description": "Delete an issue by its ID"
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Statistics & Export",
+            "item": [
+                {
+                    "name": "Get Status Counts",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/stats/counts",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "stats",
+                                "counts"
+                            ]
+                        },
+                        "description": "Get count of issues grouped by status"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Export to CSV",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/export/csv",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "export",
+                                "csv"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "Open",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "priority",
+                                    "value": "High",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Export issues to CSV file"
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Export to JSON",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/issues/export/json",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "issues",
+                                "export",
+                                "json"
+                            ],
+                            "query": [
+                                {
+                                    "key": "status",
+                                    "value": "Open",
+                                    "disabled": true
+                                },
+                                {
+                                    "key": "priority",
+                                    "value": "High",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "description": "Export issues to JSON file"
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}
